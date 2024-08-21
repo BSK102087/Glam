@@ -58,7 +58,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x143,0x11,500,1800,5,RACE_ZOMBIE,ATTRIBUTE_LIGHT) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,id,0x143,0x11,500,1500,5,RACE_ILLUSION,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
