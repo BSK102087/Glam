@@ -97,7 +97,7 @@ function s.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsNegatable,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,1,0,0)
 end
-function desfilter(c)
+function s.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
