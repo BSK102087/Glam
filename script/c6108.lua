@@ -47,7 +47,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function s.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA or (st&SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
+	return e:GetHandler():GetLocation()~=LOCATION_EXTRA or (st&SUMMON_TYPE_FUSION)==SUMMON_TYPE_SYNCHRO
 end
 function s.tdfilter(c,e)
 	return (c:IsSetCard(0x36B0) and c:IsLevel(6) and c:IsType(TYPE_FUSION)) and (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsAbleToExtraAsCost()
