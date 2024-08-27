@@ -100,7 +100,7 @@ function s.fsfilter(c)
 	return c:IsCode(6129) or c:IsCode(6130) and not c:IsForbidden()
 end
 function s.fstg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.fsfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.fsfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
 end
 function s.fsop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,2))
