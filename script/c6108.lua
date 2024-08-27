@@ -68,7 +68,7 @@ function s.spproctg(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=aux.SelectUnselectGroup(rg1,e,tp,1,1,s.rescon,1,tp,HINTMSG_TODECK,nil,nil,true)
 	local g1=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TODECK,nil,nil,true)
 	g:AddCard(g1)
-	if #g>0 then
+	if #g==3 then
 		g:KeepAlive()
 		e:SetLabelObject(g)
 		return true
