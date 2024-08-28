@@ -36,15 +36,15 @@ function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterEffect(e2)
 end
 function s.handesfilter(c)
-	return c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2) and c:IsDiscardable()
+	return c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2) and c:IsAbleToGrave() and (c:IsFaceup() or c:IsLocation(LOCATION_HAND))
 end
 function s.thfilter(c)
 	return c:IsCode(6129) or c:IsCode(6130) and c:IsAbleToHand() 
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.IsExistingMatchingCard(s.handesfilter,tp,LOCATION_HAND,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.IsExistingMatchingCard(s.handesfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,1,tp,1)
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND+LOCATION_ONFIELD)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -53,7 +53,9 @@ Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		Duel.ConfirmCards(1-tp,g)
 		Duel.ShuffleHand(tp)
 		Duel.BreakEffect()
-		Duel.DiscardHand(tp,s.handesfilter,1,1,REASON_EFFECT|REASON_DISCARD,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g1=Duel.SelectMatchingCard(tp,s.handesfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,nil,tp)
+			Duel.SendtoGrave(g1,REASON_EFFECT)
 	end
 end
 function s.cfilter(c)
