@@ -59,7 +59,7 @@ Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	end
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x36E2) or c:IsCode(6108)) and not c:IsCode(id)
+	return c:IsFaceup() and (c:IsSetCard(0x36E2) or c:IsCode(6108))
 end
 function s.opptgcondition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
