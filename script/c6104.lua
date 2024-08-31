@@ -34,31 +34,6 @@ function s.initial_effect(c)
 	e4:SetTarget(s.tgsettg)
 	e4:SetOperation(s.tgsetop)
 	c:RegisterEffect(e4)
-	--Material Limit
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE)
-	e6:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	e6:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	e6:SetValue(s.fuslimit)
-	c:RegisterEffect(e6)
-	local e7=e6:Clone()
-	e7:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-	e7:SetValue(s.synclimit)
-	c:RegisterEffect(e7)
-	local e8=e7:Clone()
-	e8:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-	e8:SetValue(s.xyzlimit)
-	c:RegisterEffect(e8)
-	local e9=e8:Clone()
-	e9:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	e9:SetValue(s.linklimit)
-	c:RegisterEffect(e9)
-	--Material Check
-	local e10=Effect.CreateEffect(c)
-	e10:SetType(EFFECT_TYPE_SINGLE)
-	e10:SetCode(EFFECT_MATERIAL_CHECK)
-	e10:SetValue(s.valcheck)
-	c:RegisterEffect(e10)
 end
 function s.tgsetcondition(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_TRIBUTE) and e:GetHandler():GetFlagEffect(id)~=0 
@@ -119,22 +94,6 @@ function s.tgsetop(e,tp,eg,ep,ev,re,r,rp)
 			tc:RegisterEffect(e5)
 		end
 	end
-end
-function s.fuslimit(e,c)
-	if not c then return false end
-	return not c:IsSetCard(0x36B0)
-end
-function s.synclimit(e,c)
-	if not c then return false end
-	return not c:IsSetCard(0x36B0)
-end
-function s.xyzlimit(e,c)
-	if not c then return false end
-	return not c:IsSetCard(0x36B0)
-end
-function s.linklimit(e,c)
-	if not c then return false end
-	return not c:IsSetCard(0x36B0)
 end
 function s.valfilter(c)
 	return c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2)
