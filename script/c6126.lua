@@ -42,7 +42,7 @@ function s.initial_effect(c)
 end
 function s.handcon(e,c)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_EXTRA,0,1,nil)
+	return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler())
 end
 function s.costfilter(c)
 	return c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2) and c:IsAbleToRemoveAsCost()
