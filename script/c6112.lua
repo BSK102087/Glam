@@ -55,29 +55,36 @@ end
 function s.dattchfilter(c,xyzc,tp)
 	return c:IsSetCard(0x36B0) and c:IsMonster() and c:IsCanBeXyzMaterial(xyzc,tp,REASON_EFFECT)
 end
+function s.dattchfilter1(c)
+	return c:IsSetCard(0x36B0) and c:IsType(TYPE_XYZ)
+end
 function s.dattchtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local c=e:GetHandler()
-		return c:IsType(TYPE_XYZ) and Duel.IsExistingMatchingCard(s.dattchfilter,tp,LOCATION_DECK,0,1,nil,c,tp)
-	end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.dattchfilter1(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.dattchfilter1,tp,LOCATION_MZONE,0,1,nil) 
+		and Duel.IsExistingMatchingCard(s.dattchfilter,tp,LOCATION_DECK,0,1,nil,c,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,s.dattchfilter1,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.dattchop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTACH)
 	local g=Duel.SelectMatchingCard(tp,s.dattchfilter,tp,LOCATION_DECK,0,1,1,nil)
-	local tc=g:GetFirst()
-	if tc then
-		Duel.Overlay(c,tc,true)
-		if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
-			Duel.BreakEffect()
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-			e2:SetCode(EFFECT_CHANGE_CODE)
-			e2:SetValue(tc:GetCode())
-			c:RegisterEffect(e2)
+		if #g>0 then
+		Duel.Overlay(tc,g,true) 
+			if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+				local tc1=g:GetFirst()
+				local code=tc1:GetCode()
+				Duel.BreakEffect()
+				local e2=Effect.CreateEffect(c)
+				e2:SetType(EFFECT_TYPE_SINGLE)
+				e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+				e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+				e2:SetCode(EFFECT_CHANGE_CODE)
+				e2:SetValue(code)
+				tc:RegisterEffect(e2)
+			end
 		end
 	end
 end
