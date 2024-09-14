@@ -126,15 +126,28 @@ end
 function s.quickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,6129),0,LOCATION_FZONE,LOCATION_FZONE,1,nil)
 end
+function s.rtfilter(c)
+	return c:IsAbleToGrave() or c:IsAbletoDeck()
+end
 function s.rttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_REMOVED)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
 end
 function s.rtop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.rtfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil)
 	if #g>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT+REASON_RETURN)
+		local th=g:GetFirst()
+		local sp=g:GetFirst()
+		local op=0
+		if th and sp then op=Duel.SelectOption(tp,aux.Stringid(id,3),aux.Stringid(id,4))
+		elseif sp then op=0
+		else op=1 
+		end
+		if op==0 then
+			Duel.SendtoGrave(g,REASON_EFFECT+REASON_RETURN)
+		else
+			Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		end
 	end
 end
 function s.regcon(e,tp,eg,ep,ev,re,r,rp)
