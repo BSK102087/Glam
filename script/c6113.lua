@@ -91,7 +91,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function s.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x36B0) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
+	return c:IsFaceup() and c:IsSetCard(0x36B0) and not c:IsType(TYPE_FIELD) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
 		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,e:GetHandler(),e,tp,c:GetCode())
 end
 function s.filter2(c,e,tp,code)
