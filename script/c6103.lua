@@ -44,14 +44,6 @@ function s.selfsptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-	e5:SetDescription(aux.Stringid(id,2))
-	e5:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e5:SetTargetRange(1,0)
-	e5:SetValue(s.aclimit)
-	Duel.RegisterEffect(e5,tp)
 	local exc=c:IsRelateToEffect(e) and c or nil
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,exc,tp)
@@ -86,9 +78,6 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 			end
 		end
 	end
-end
-function s.aclimit(e,re,tp)
-	return not re:GetHandler():IsSetCard(0x36B0) and not re:GetHandler():IsSetCard(0x36E2)
 end
 function s.quickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD)>Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)

@@ -92,16 +92,20 @@ function s.safilter(c)
 	return c:IsCode(6127)
 end
 function s.satg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.safilter,tp,LOCATION_DECK,0,1,nil)
-	end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and s.safilter(chkc) end
+	if chk==0 then return Duel.IsExistingMatchingCard(s.safilter,tp,LOCATION_DECK,0,1,nil) 
+		and Duel.IsExistingTarget(s.dattchfilter1,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	Duel.SelectTarget(tp,s.dattchfilter1,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function s.saop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
 	Duel.Hint(HINT_SELECTMSG,tp,0)
 	local g=Duel.SelectMatchingCard(tp,s.safilter,tp,LOCATION_DECK,0,1,1,nil,ft,e,tp)
 	if #g>0 then
-		local th=g:GetFirst() and c:IsRelateToEffect(e)
+		local th=g:GetFirst() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e)
 		local sp=ft>0 and g:GetFirst():IsSSetable()
 		local op=0
 		if th and sp then op=Duel.SelectOption(tp,aux.Stringid(id,1),aux.Stringid(id,2))
@@ -122,7 +126,7 @@ function s.saop(e,tp,eg,ep,ev,re,r,rp)
 			e5:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e5)
 		else
-			Duel.Overlay(c,g,true)
+			Duel.Overlay(tc,g,true) 
 		end
 	end
 end

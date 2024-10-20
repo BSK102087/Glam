@@ -47,7 +47,16 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_HAND+LOCATION_ONFIELD)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
-Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local c=e:GetHandler()
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e4:SetDescription(aux.Stringid(id,2))
+	e4:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e4:SetTargetRange(1,0)
+	e4:SetValue(s.aclimit)
+	Duel.RegisterEffect(e4,tp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 then
 		Duel.ConfirmCards(1-tp,g)
@@ -57,6 +66,9 @@ Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local g1=Duel.SelectMatchingCard(tp,s.handesfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,nil,tp)
 			Duel.SendtoGrave(g1,REASON_EFFECT)
 	end
+end
+function s.aclimit(e,re,tp)
+	return not re:GetHandler():IsSetCard(0x36B0) and not re:GetHandler():IsSetCard(0x36E2)
 end
 function s.cfilter(c)
 	return c:IsFaceup() and (c:IsSetCard(0x36E2) or c:IsCode(6108))

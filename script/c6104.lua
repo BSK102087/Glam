@@ -42,7 +42,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function s.tgsetcondition(e)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_TRIBUTE) and e:GetHandler():GetFlagEffect(id)~=0 
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_TRIBUTE) 
 end
 function s.tgfilter(c)
 	return c:IsMonster() and c:IsSetCard(0x36B0) and not c:IsCode(id) and c:IsAbleToGrave()
@@ -53,7 +53,7 @@ end
 function s.tgsettg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b1=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) 
 	local b2=Duel.IsExistingMatchingCard(s.setfilter,tp,LOCATION_DECK,0,1,nil)
-	local b3=b1 and b2 
+	local b3=b1 and b2 and e:GetHandler():GetFlagEffect(id)~=0
 	if chk==0 then return b1 or b2 end
 	local op=Duel.SelectEffect(tp,
 		{b1,aux.Stringid(id,2)},

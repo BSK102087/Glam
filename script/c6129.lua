@@ -8,15 +8,15 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
-	--Foolish Random Burial
+	--Special Summon
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOGRAVE)
+	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_EVENT_PLAYER)
 	e2:SetCode(EVENT_CUSTOM+id)
-	e2:SetCountLimit(2)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.target1)
 	e2:SetOperation(s.operation1)
 	c:RegisterEffect(e2)
@@ -47,15 +47,15 @@ function s.initial_effect(c)
 	e4:SetValue(s.glamfilter)
 	c:RegisterEffect(e4)
 end
-function s.filter(c)
+function s.fsfilter(c)
 	return c:IsFieldSpell() and c:IsCode(6130) and not c:IsForbidden()
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(s.fsfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	if #g>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.fsfilter),tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
 		local tc=g:GetFirst()
 		local fc=Duel.GetFieldCard(1-tp,LOCATION_FZONE,0)
 		if fc then
@@ -76,22 +76,32 @@ function s.check(e,tp,eg,ep,ev,re,r,rp)
 	if #g1>0 then Duel.RaiseEvent(g1,EVENT_CUSTOM+id,re,r,rp,0,0) end
 	if #g2>0 then Duel.RaiseEvent(g2,EVENT_CUSTOM+id,re,r,rp,1,0) end
 end
+function s.filter(c,e,tp)
+	return c:IsFaceup() and c:IsSetCard(0x36B0) and not c:IsType(TYPE_FIELD) and (c:IsLocation(LOCATION_GRAVE) or c:IsFaceup()) and c:IsAbleToDeck()
+		and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,e:GetHandler(),e,tp,c:GetCode())
+end
+function s.filter2(c,e,tp,code)
+	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and ((c:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
+		or (c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0))
+end
 function s.target1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and s.filter(chkc,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_EXTRA)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,1,0,0)
 end
 function s.operation1(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
-	if #g<1 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local sg=g:RandomSelect(tp,1)
-	Duel.SendtoGrave(sg,REASON_EFFECT)
-	local tc=sg:GetFirst()
-	if not tc:IsSetCard(0x36B0) then
-		if not tc:IsSetCard(0x36E2) then 
-			Duel.BreakEffect()
-			Duel.ShuffleDeck(tp)
-			Duel.Remove(tc,POS_FACEDOWN,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g1=Duel.SelectMatchingCard(tp,s.filter2,tp,LOCATION_DECK+LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetCode())
+		if #g1>0 then
+			if Duel.SpecialSummon(g1,0,tp,tp,true,false,POS_FACEUP)>0 then
+				Duel.BreakEffect()
+				Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+			end
 		end
 	end
 end
