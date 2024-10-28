@@ -74,7 +74,7 @@ function s.spfilter(c,tp)
 	return c:IsCode(6114) or (c:IsSetCard(0x36E2) and c:IsType(TYPE_TRAP+TYPE_CONTINUOUS)) and c:IsControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.spfilter,1,nil,tp)
+	return eg:IsExists(s.spfilter,1,nil,tp) and c:IsControler(tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
