@@ -16,19 +16,13 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetCountLimit(1)
 	c:RegisterEffect(e2)
-	--Inactivatable
+	--No response
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_CANNOT_INACTIVATE)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_FZONE)
-	e3:SetValue(s.effectfilter)
+	e3:SetOperation(s.chainop)
 	c:RegisterEffect(e3)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_CANNOT_DISEFFECT)
-	e4:SetRange(LOCATION_FZONE)
-	e4:SetValue(s.effectfilter)
-	c:RegisterEffect(e4)
 end
 function s.filter(c)
 	return c:IsFieldSpell() and c:IsCode(6129) and not c:IsForbidden()
@@ -51,8 +45,8 @@ end
 function s.matfilter(c)
 	return c:IsLocation(LOCATION_MZONE+LOCATION_HAND) and c:IsMonster()
 end
-function s.effectfilter(e,ct)
-	local p=e:GetHandler():GetControler()
-	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
-	return p==tp and te:GetHandler():IsSetCard(0x36E2) and loc&LOCATION_ONFIELD+LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED~=0
+function s.chainop(e,tp,eg,ep,ev,re,r,rp)
+	if re:GetHandler():IsSetCard(0x36E2) then
+		Duel.SetChainLimit(aux.FALSE)
+	end
 end
