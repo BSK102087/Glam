@@ -56,31 +56,22 @@ end
 function s.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA or (st&SUMMON_TYPE_LILNK)==SUMMON_TYPE_LINK
 end
-function s.tdfilter(c,tp,sc)
-	return c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2) and not c:IsCode(6116) and (c:IsFaceup() or c:IsLocation(LOCATION_HAND+LOCATION_GRAVE)) and c:IsAbleToDeckOrExtraAsCost()
+function s.tdfilter(c)
+	return (c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2)) and (c:IsFaceup() or c:IsLocation(LOCATION_HAND+LOCATION_GRAVE)) and c:IsAbleToDeckOrExtraAsCost()
 end
-function s.spectrafilter(c,e)
-	return c:IsCode(6116) and (c:IsFaceup() or c:IsLocation(LOCATION_HAND+LOCATION_GRAVE)) and c:IsAbleToDeckAsCost()
+function s.rescon(sg,e,tp,mg)
+	return sg:IsExists(Card.IsCode,1,nil,6116) and sg:GetClassCount(Card.GetCode)==#sg,sg:GetClassCount(Card.GetCode)~=#sg
 end
 function s.spproccon(e,c)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
 	local rg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	return Duel.GetLocationCountFromEx(tp,tp,rg,e:GetHandler())>0 
-		and Duel.GetFieldGroupCount(tp,LOCATION_EMZONE,0)==0 
-		and aux.SelectUnselectGroup(rg,e,tp,5,5,aux.dncheck,0)
-		and Duel.IsExistingMatchingCard(s.spectrafilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,1,e,tp)
-end
-function s.rescon(sg,e,tp,mg)
-	return sg:IsExists(Card.IsCode,1,nil,6116)
+	return Duel.GetLocationCountFromEx(tp,tp,rg,e:GetHandler())>0  and aux.SelectUnselectGroup(rg,e,tp,6,6,s.rescon,0)
 end
 function s.spproctg(e,tp,eg,ep,ev,re,r,rp,c)
 	local rg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	local rg1=Duel.GetMatchingGroup(s.spectrafilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	local g=aux.SelectUnselectGroup(rg,e,tp,5,5,aux.dncheck,1,tp,HINTMSG_TODECK,nil,nil,true)
-	local g1=aux.SelectUnselectGroup(rg1,e,tp,1,1,s.rescon,1,tp,HINTMSG_TODECK,nil,nil,true)
-	g:AddCard(g1)
-	if #g==6 then
+	local g=aux.SelectUnselectGroup(rg,e,tp,6,6,s.rescon,1,tp,HINTMSG_TODECK,nil,nil,true)
+	if #g>0 then
 		g:KeepAlive()
 		e:SetLabelObject(g)
 		return true
