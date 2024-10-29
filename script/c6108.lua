@@ -64,7 +64,7 @@ end
 function s.spproctg(e,tp,eg,ep,ev,re,r,rp,c)
 	local rg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_MZONE+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	local rg1=Duel.GetMatchingGroup(s.primafilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	local g=aux.SelectUnselectGroup(rg1,e,tp,1,1,s.rescon,1,tp,HINTMSG_TODECK,nil,nil,true)
+	local g=aux.SelectUnselectGroup(rg1,e,tp,1,1,aux.dncheck,1,tp,HINTMSG_TODECK,nil,nil,true)
 	local g1=aux.SelectUnselectGroup(rg,e,tp,2,2,aux.dncheck,1,tp,HINTMSG_TODECK,nil,nil,true)
 	g:AddCard(g1)
 	if #g==3 then
