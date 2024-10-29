@@ -66,7 +66,9 @@ function s.spproccon(e,c)
 	if c==nil then return true end
 	local tp=e:GetHandlerPlayer()
 	local rg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	return Duel.GetLocationCountFromEx(tp,tp,rg,e:GetHandler())>0  and aux.SelectUnselectGroup(rg,e,tp,6,6,s.rescon,0)
+	return Duel.GetLocationCountFromEx(tp,tp,rg,e:GetHandler())>0 
+		and aux.SelectUnselectGroup(rg,e,tp,6,6,s.rescon,0)
+		and Duel.GetFieldGroupCount(tp,LOCATION_EMZONE,0)==0 
 end
 function s.spproctg(e,tp,eg,ep,ev,re,r,rp,c)
 	local rg=Duel.GetMatchingGroup(s.tdfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
