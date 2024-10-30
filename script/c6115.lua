@@ -71,7 +71,7 @@ function s.aclimit(e,re,tp)
 	return not re:GetHandler():IsSetCard(0x36B0) and not re:GetHandler():IsSetCard(0x36E2)
 end
 function s.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x36E2) or c:IsCode(6108)) and c:IsControler(tp)
+	return c:IsFaceup() and (c:IsSetCard(0x36E2) or c:IsCode(6108))
 end
 function s.opptgcondition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
