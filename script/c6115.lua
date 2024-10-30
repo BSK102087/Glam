@@ -77,7 +77,7 @@ function s.opptgcondition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil)
 end
 function s.oppfilter(c)
-	return c:IsFaceup() and c:IsAttackAbove(0)
+	return c:IsFaceup()
 end
 function s.opptgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.oppfilter,tp,0,LOCATION_MZONE,1,nil) end
