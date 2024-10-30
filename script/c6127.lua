@@ -45,13 +45,13 @@ function s.handcon(e,c)
 	return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,e:GetHandler())
 end
 function s.costfilter(c)
-	return c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2) and c:IsAbleToDeckOrExtraAsCost() and (c:IsFaceup() or c:IsLocation(LOCATION_HAND+LOCATION_GRAVE))
+	return (c:IsFaceup() or c:IsLocation(LOCATION_HAND+LOCATION_GRAVE)) and c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2) and c:IsAbleToDeckOrExtraAsCost() 
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end 
 	if e:GetHandler():IsStatus(STATUS_ACT_FROM_HAND) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-		local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
+		local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,e:GetHandler())
 		if #g>0 then
 			Duel.ConfirmCards(1-tp,g)
 			Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)
