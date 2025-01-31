@@ -127,7 +127,7 @@ function s.quickcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,6129),0,LOCATION_FZONE,LOCATION_FZONE,1,nil)
 end
 function s.rtfilter(c)
-	return c:IsAbleToGrave() or c:IsAbletoDeck()
+	return c:IsAbleToGrave() or c:IsAbleToDeck()
 end
 function s.rttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.rtfilter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil) end
