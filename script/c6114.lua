@@ -54,7 +54,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function s.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA or (st&SUMMON_TYPE_LILNK)==SUMMON_TYPE_LINK
+	return e:GetHandler():GetLocation()~=LOCATION_EXTRA or (st&SUMMON_TYPE_LINK)==SUMMON_TYPE_LINK
 end
 function s.tdfilter(c)
 	return (c:IsSetCard(0x36B0) or c:IsSetCard(0x36E2)) and (c:IsFaceup() or c:IsLocation(LOCATION_HAND+LOCATION_GRAVE)) and c:IsAbleToDeckOrExtraAsCost()
