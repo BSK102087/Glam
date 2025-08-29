@@ -93,7 +93,7 @@ end
 function s.disop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsChainDisablable(0) then
 		local sel=1
-		local g=Duel.GetMatchingGroup(Card.IsMonster,tp,0,LOCATION_HAND,nil)
+		local g=Duel.GetMatchingGroup(Card.IsMonster,tp,0,LOCATION_HAND+LOCATION_MZONE,nil)
 		Duel.Hint(HINT_SELECTMSG,1-tp,aux.Stringid(id,2))
 		if #g>0 then
 			sel=Duel.SelectOption(1-tp,1213,1214)
