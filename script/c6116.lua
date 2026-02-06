@@ -71,7 +71,7 @@ function s.sp1limit(e,c)
 	return not c:IsSetCard(0x36B0) and not c:IsSetCard(0x36E2)
 end
 function s.spfilter(c,tp)
-	return c:IsCode(6114) or c:IsSetCard(0x36E2)
+	return c:IsCode(6114) or c:IsSetCard(0x36E2) and not c:IsCode(6116)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.spfilter,1,nil,tp) 
@@ -98,3 +98,4 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+
