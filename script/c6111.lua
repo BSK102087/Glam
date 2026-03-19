@@ -93,7 +93,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function s.filter(c,e)
-	return c:IsFaceup() and c:IsAbleToChangeControler()
+	return c:IsAbleToChangeControler()
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Draw(tp,1,REASON_EFFECT)==0 then return end
